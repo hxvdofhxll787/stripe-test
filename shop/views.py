@@ -18,7 +18,10 @@ def buy_item(request, item_id: int):
 def item_detail(request, item_id: int):
     item = get_object_or_404(Item, id=item_id)
 
-    return render (request, 'shop/item.html', {
+    return render(request, 'shop/item.html', {
         'item': item,
         'stripe_publishable_key': settings.STRIPE_PUBLISHABLE_KEY,
     })
+
+def payment_success(request):
+    return render(request, 'shop/payment_success.html')
