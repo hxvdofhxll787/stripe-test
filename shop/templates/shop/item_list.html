@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Товары</title>
+    </head>
+    <body>
+        <h1>Товары</h1>
+
+        {% for item in items %}
+            <div>
+                <h3>
+                    <a href="{% url 'item-detail' item.id %}">
+                        {{ item.name }}
+                    </a>
+                </h3>
+
+                <p>{{ item.description }}</p>
+                <p>{{ item.price }}</p>
+            </div>
+        {% empty %}
+            <p>Товары не найдены</p>
+        {% endfor %}
+    </body>
+</html>

@@ -25,3 +25,8 @@ def item_detail(request, item_id: int):
 
 def payment_success(request):
     return render(request, 'shop/payment_success.html')
+
+def item_list(request):
+    items = Item.objects.all()
+
+    return render(request, 'shop/item_list.html', { 'items': items })
