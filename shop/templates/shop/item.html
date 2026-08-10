@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>{{ item.name }}</title>
+
+        <script src="https://js.stripe.com/v3/"></script>
+    </head>
+    <body>
+        <h1>{{ item.name }}</h1>
+        <p>{{ item.description }}</p>
+        <p>{{ item.price }}</p>
+        <button id="buy-button">Buy</button>
+        <script>
+            const stripe = Stripe("{{ stripe_publishable_key }}");
+            const buyButton = document.getElementById('buy-button');
+
+            buyButton.addEventListener('click', async () => {
+                buyButton.disabled = true;
+
+                try {
+                    const response = await fetch('{% url "buy-item" item.id %}', {method: 'GET'});
+
+                    if (!response.ok) {
+                        throw new Error("Не удалось создать сессию оформления заказа");
+                    }
+
+                    const session = await response.json();
+
+                    const result = await stripe.redirectToCheckout({ sessionId: session.id });
+
+                    if (result.error) {
+                        throw new Error(result.error.message);
+                    }
+                } catch (error) {
+                    console.error(error);
+
+                    buyButton.disabled = false;
+                }
+            });
+        </script>
+    </body>
+</html>
