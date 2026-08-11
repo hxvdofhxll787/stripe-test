@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>{{ item.name }}</title>
+        <title>Заказ #{{ order.id }}</title>
 
         <script src="https://js.stripe.com/v3/"></script>
 
@@ -9,12 +9,23 @@
             .price {
                 font-size: 18px;
             }
+            .total_price {
+                font-size: 20px;
+            }
         </style>
     </head>
     <body>
-        <h1>{{ item.name }}</h1>
-        <p>{{ item.description }}</p>
-        <p class="price">{{ item.price }} $</p>
+        <h1>Заказ #{{ order.id }}</h1>
+
+        {% for item in items %}
+            <h3>{{ item.item.name }}</h3>
+            <p>{{ item.item.description }}</p>
+            <p class="price">{{ item.item.price }} $ - за шт.</p>
+            <p>В заказе {{ item.quantity }} шт.</p>
+        <hr>
+        {% endfor %}
+
+        <p class="total_price">Общая стоимость: {{ order.total_price }} $</p>
 
         <button id="buy-button">Купить</button>
 
@@ -26,7 +37,7 @@
                 buyButton.disabled = true;
 
                 try {
-                    const response = await fetch('{% url "buy-item" item.id %}', {method: 'GET'});
+                    const response = await fetch('{% url "buy-order" order.id %}', {method: 'GET'});
 
                     if (!response.ok) {
                         throw new Error("Не удалось создать сессию оформления заказа");

@@ -28,12 +28,22 @@ def buy_order(request, order_id: int):
         'id': session.id,
     })
 
-@require_GET
 def item_detail(request, item_id: int):
     item = get_object_or_404(Item, id=item_id)
 
     return render(request, 'shop/item.html', {
         'item': item,
+        'stripe_publishable_key': settings.STRIPE_PUBLISHABLE_KEY,
+    })
+
+def order_detail(request, order_id: int):
+    order = get_object_or_404(Order, id=order_id)
+
+    items = order.order_items.all()
+
+    return render(request, 'shop/order.html', {
+        'order': order,
+        'items': items,
         'stripe_publishable_key': settings.STRIPE_PUBLISHABLE_KEY,
     })
 
@@ -44,3 +54,8 @@ def item_list(request):
     items = Item.objects.all()
 
     return render(request, 'shop/item_list.html', { 'items': items })
+
+def order_list(request):
+    orders = Order.objects.all()
+
+    return render(request, 'shop/order_list.html', { 'orders': orders })

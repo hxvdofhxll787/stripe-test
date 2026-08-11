@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Товары</title>
+        <title>Заказы</title>
+
         <style>
             a {
                 text-decoration: none;
@@ -14,23 +15,21 @@
             div:hover {
                 background: #f1f1f1;
             }
-            .price {
+            .total_price {
                 font-size: 18px;
             }
         </style>
     </head>
     <body>
-        <h1>Товары</h1>
+        <h1>Заказы</h1>
 
-        {% for item in items %}
-            <a href="{% url 'item-detail' item.id %}">
+        {% for order in orders %}
+            <a href="{% url 'order-detail' order.id %}">
                 <div>
                     <h3>
-                        {{ item.name }}
+                        Заказ #{{ order.id }}
                     </h3>
-
-                    <p>{{ item.description }}</p>
-                    <p class="price">{{ item.price }} $</p>
+                    <p class="total_price">Общая стоимость {{ order.total_price }} $</p>
                 </div>
             </a>
             <hr>
