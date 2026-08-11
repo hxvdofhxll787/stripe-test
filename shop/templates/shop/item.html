@@ -11,7 +11,7 @@
         <p>{{ item.price }}</p>
         <button id="buy-button">Buy</button>
         <script>
-            const stripe = Stripe("{{ stripe_publishable_key }}");
+            const stripe = Stripe('{{ stripe_publishable_key }}');
             const buyButton = document.getElementById('buy-button');
 
             buyButton.addEventListener('click', async () => {
