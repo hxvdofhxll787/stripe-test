@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from django.conf import settings
 from django.views.decorators.http import require_GET
 
-from .models import Item
+from .models import Item, Order
 from .services.payment_service import PaymentService
 
 @require_GET
@@ -12,6 +12,17 @@ def buy_item(request, item_id: int):
 
     payment_service = PaymentService()
     session = payment_service.create_checkout_session(item)
+
+    return JsonResponse({
+        'id': session.id,
+    })
+
+@require_GET
+def buy_order(request, order_id: int):
+    order = get_object_or_404(Order, id=order_id)
+
+    payment_service = PaymentService()
+    session = payment_service.create_order_checkout_session(order)
 
     return JsonResponse({
         'id': session.id,
