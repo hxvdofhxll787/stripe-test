@@ -13,6 +13,7 @@ class ItemViewTest(TestCase):
             name='Test Item',
             description='Test description',
             price=Decimal('100.24'),
+            currency='usd',
         )
 
     def test_item_page(self):
@@ -82,7 +83,7 @@ class OrderModelTest(TestCase):
 
         self.assertEqual(
             order.total_price,
-            Decimal("37.00"),
+            Decimal('37.00'),
         )
 
 class TaxDiscountTest(TestCase):

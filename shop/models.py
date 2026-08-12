@@ -1,5 +1,4 @@
 from django.db import models
-from stripe import Discount
 from django.core.validators import MaxValueValidator, MinValueValidator
 
 
@@ -30,6 +29,7 @@ class Order(models.Model):
     items = models.ManyToManyField(Item, through='OrderItem', related_name='orders')
     discount = models.ForeignKey(Discount, on_delete=models.SET_NULL, null=True, blank=True, related_name='orders')
     tax = models.ForeignKey(Tax, on_delete=models.SET_NULL, null=True, blank=True, related_name='orders')
+    currency = models.CharField(max_length=3, null=True, blank=True)
 
     def __str__(self):
         return f'Order {self.id}'
@@ -54,6 +54,16 @@ class Order(models.Model):
     def total_price(self):
         return self.subtotal - self.discount_amount + self.tax_amount
 
+    def update_currency(self, *args, **kwargs):
+        currencies = self.order_items.values_list("item__currency", flat=True).distinct()
+
+        if len(currencies) != 1:
+            raise ValueError(f"Нельзя совмещать разные валюты!")
+
+        self.currency = currencies[0]
+
+        self.save(update_fields=['currency'])
+
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='order_items')
     item = models.ForeignKey(Item, on_delete=models.PROTECT, related_name='order_items')
@@ -67,6 +77,11 @@ class OrderItem(models.Model):
     @property
     def total_price(self):
         return self.quantity * self.item.price
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+        self.order.update_currency()
 
     def __str__(self):
         return f'{self.item.name} {self.quantity}'

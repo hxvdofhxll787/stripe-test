@@ -14,7 +14,7 @@
     <body>
         <h1>{{ item.name }}</h1>
         <p>{{ item.description }}</p>
-        <p class="price">{{ item.price }} $</p>
+        <p class="price">{{ item.price }} {{ item.currency|upper }}</p>
 
         <button id="buy-button">Купить</button>
 

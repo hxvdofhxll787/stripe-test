@@ -20,12 +20,12 @@
         {% for item in items %}
             <h3>{{ item.item.name }}</h3>
             <p>{{ item.item.description }}</p>
-            <p class="price">{{ item.item.price }} $ - за шт.</p>
+            <p class="price">{{ item.item.price }} {{ item.item.currency|upper }} - за шт.</p>
             <p>В заказе {{ item.quantity }} шт.</p>
         <hr>
         {% endfor %}
 
-        <p class="total_price">Общая стоимость: {{ order.total_price|floatformat:2 }} $</p>
+        <p class="total_price">Общая стоимость: {{ order.total_price|floatformat:2 }} {{ order.currency|upper }}</p>
 
         {% if order.discount_amount != 0 %}
             <p class="coupon">Скидка: {{ order.discount.percent|floatformat:0 }}% ({{ order.discount.name }})</p>

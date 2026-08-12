@@ -13,8 +13,9 @@ class OrderItemInline(admin.TabularInline):
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ('id', 'discount', 'tax', 'subtotal', 'discount_amount', 'tax_amount', 'total_price')
+    list_display = ('id', 'discount', 'tax', 'subtotal', 'discount_amount', 'tax_amount', 'total_price', 'currency')
     search_fields = ('name',)
+    readonly_fields = ('currency',)
     inlines = [OrderItemInline]
 
 @admin.register(Discount)

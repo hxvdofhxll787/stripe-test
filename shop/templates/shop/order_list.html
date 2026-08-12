@@ -29,7 +29,7 @@
                     <h3>
                         Заказ #{{ order.id }}
                     </h3>
-                        <p class="total_price">Общая стоимость: {{ order.total_price|floatformat:2 }} $</p>
+                        <p class="total_price">Общая стоимость: {{ order.total_price|floatformat:2 }} {{ order.currency|upper }}</p>
                 </div>
             </a>
             <hr>

@@ -31,9 +31,14 @@ def buy_order(request, order_id: int):
 def item_detail(request, item_id: int):
     item = get_object_or_404(Item, id=item_id)
 
+    publishable_keys = {
+        "usd": settings.STRIPE_USD_PUBLISHABLE_KEY,
+        "eur": settings.STRIPE_EUR_PUBLISHABLE_KEY,
+    }
+
     return render(request, 'shop/item.html', {
         'item': item,
-        'stripe_publishable_key': settings.STRIPE_PUBLISHABLE_KEY,
+        'stripe_publishable_key': publishable_keys[item.currency],
     })
 
 def order_detail(request, order_id: int):
@@ -41,10 +46,15 @@ def order_detail(request, order_id: int):
 
     items = order.order_items.all()
 
+    publishable_keys = {
+        "usd": settings.STRIPE_USD_PUBLISHABLE_KEY,
+        "eur": settings.STRIPE_EUR_PUBLISHABLE_KEY,
+    }
+
     return render(request, 'shop/order.html', {
         'order': order,
         'items': items,
-        'stripe_publishable_key': settings.STRIPE_PUBLISHABLE_KEY,
+        'stripe_publishable_key': publishable_keys[order.currency],
     })
 
 def payment_success(request):
