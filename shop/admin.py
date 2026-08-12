@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Item, Order, OrderItem, Discount
+from .models import Item, Order, OrderItem, Discount, Tax
 
 
 @admin.register(Item)
@@ -13,11 +13,16 @@ class OrderItemInline(admin.TabularInline):
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ('id', 'total_price', 'discount', 'total_price_with_discount', 'discount_amount')
+    list_display = ('id', 'discount', 'tax', 'subtotal', 'discount_amount', 'tax_amount', 'total_price')
     search_fields = ('name',)
     inlines = [OrderItemInline]
 
 @admin.register(Discount)
 class DiscountAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'percent')
+    search_fields = ('name',)
+
+@admin.register(Tax)
+class TaxAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'percent')
     search_fields = ('name',)
