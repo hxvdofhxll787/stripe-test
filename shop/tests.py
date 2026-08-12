@@ -4,7 +4,8 @@ from django.urls import reverse
 from decimal import Decimal
 from unittest.mock import patch
 
-from .models import Item, Order, OrderItem
+from .models import Item, Order, OrderItem, Discount, Tax
+
 
 class ItemViewTest(TestCase):
     def setUp(self):
@@ -83,3 +84,54 @@ class OrderModelTest(TestCase):
             order.total_price,
             Decimal("37.00"),
         )
+
+class TaxDiscountTest(TestCase):
+    def setUp(self):
+        self.item = Item.objects.create(
+            name='Item',
+            description='Description',
+            price=Decimal('100.24'),
+        )
+
+        self.discount = Discount.objects.create(
+            name='Discount',
+            percent=Decimal('20.00'),
+        )
+
+        self.tax = Tax.objects.create(
+            name='Tax',
+            percent=Decimal('28.00'),
+        )
+
+    def test_order_discount_and_tax(self):
+        order = Order.objects.create(
+            discount=self.discount,
+            tax=self.tax,
+        )
+
+        OrderItem.objects.create(
+            order=order,
+            item=self.item,
+            quantity=1,
+        )
+
+        self.assertEqual(
+            order.subtotal,
+            Decimal('100.24'),
+        )
+
+        self.assertEqual(
+            order.discount_amount,
+            Decimal('20.048'),
+        )
+
+        self.assertEqual(
+            order.tax_amount,
+            Decimal('22.45376'),
+        )
+
+        self.assertEqual(
+            order.total_price,
+            Decimal('102.64576'),
+        )
+
