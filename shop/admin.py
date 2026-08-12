@@ -4,7 +4,7 @@ from .models import Item, Order, OrderItem, Discount, Tax
 
 @admin.register(Item)
 class ItemAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'description', 'price')
+    list_display = ('id', 'name', 'description', 'price', 'currency')
     search_fields = ('name',)
 
 class OrderItemInline(admin.TabularInline):
