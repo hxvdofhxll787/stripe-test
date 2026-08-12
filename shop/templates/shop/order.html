@@ -25,10 +25,9 @@
         <hr>
         {% endfor %}
 
-        {% if order.discount_amount == 0 %}
-            <p class="total_price">Общая стоимость: {{ order.total_price }} $</p>
-        {% else %}
-            <p class="total_price">Общая стоимость: <span style="text-decoration: line-through">{{ order.total_price }} $</span> - {{ order.total_price_with_discount|floatformat:2 }} $</p>
+        <p class="total_price">Общая стоимость: {{ order.total_price|floatformat:2 }} $</p>
+
+        {% if order.discount_amount != 0 %}
             <p class="coupon">Скидка: {{ order.discount.percent|floatformat:0 }}% ({{ order.discount.name }})</p>
         {% endif %}
 

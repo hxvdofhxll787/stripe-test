@@ -1,6 +1,6 @@
 import stripe
 from django.conf import settings
-from shop.models import Item, Order, Discount
+from shop.models import Item, Order, Discount, Tax
 
 class PaymentService:
     def __init__(self):
@@ -30,6 +30,13 @@ class PaymentService:
     def create_order_checkout_session(self, order: Order):
         line_items = []
 
+        if order.tax:
+            tax = self.create_tax(order.tax)
+
+            tax_rate = [tax.id]
+        else:
+            tax_rate = []
+
         for order_item in order.order_items.select_related('item'):
             line_items.append(
                 {
@@ -42,6 +49,7 @@ class PaymentService:
                         'unit_amount': int(order_item.item.price * 100),
                     },
                     'quantity': order_item.quantity,
+                    'tax_rates': tax_rate,
                 },
             )
 
@@ -70,3 +78,13 @@ class PaymentService:
         })
 
         return coupon
+
+    def create_tax(self, tax: Tax):
+        tax = self.client.v1.tax_rates.create({
+            'display_name': tax.name,
+            'percentage': tax.percent,
+            'inclusive': False,
+            'tax_type': 'sales_tax',
+        })
+
+        return tax
