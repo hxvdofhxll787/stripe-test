@@ -83,7 +83,7 @@ class PaymentService:
             }
         )
 
-    def create_coupon(self, discount: Discount, client):
+    def create_coupon(discount: Discount, client):
         coupon = client.v1.coupons.create({
             'duration': 'once',
             'name': discount.name,
