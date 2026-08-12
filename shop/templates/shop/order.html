@@ -9,7 +9,7 @@
             .price {
                 font-size: 18px;
             }
-            .total_price {
+            .total_price, .coupon {
                 font-size: 20px;
             }
         </style>
@@ -25,7 +25,12 @@
         <hr>
         {% endfor %}
 
-        <p class="total_price">Общая стоимость: {{ order.total_price }} $</p>
+        {% if order.discount_amount == 0 %}
+            <p class="total_price">Общая стоимость: {{ order.total_price }} $</p>
+        {% else %}
+            <p class="total_price">Общая стоимость: <span style="text-decoration: line-through">{{ order.total_price }} $</span> - {{ order.total_price_with_discount|floatformat:2 }} $</p>
+            <p class="coupon">Скидка: {{ order.discount.percent|floatformat:0 }}% ({{ order.discount.name }})</p>
+        {% endif %}
 
         <button id="buy-button">Купить</button>
 
