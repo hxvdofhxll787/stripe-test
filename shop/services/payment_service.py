@@ -1,6 +1,6 @@
 import stripe
 from django.conf import settings
-from shop.models import Item, Order
+from shop.models import Item, Order, Discount
 
 class PaymentService:
     def __init__(self):
@@ -45,10 +45,28 @@ class PaymentService:
                 },
             )
 
+        data = {
+            'line_items': line_items,
+            'mode': 'payment',
+            'success_url': f"{settings.SITE_URL}/success",
+        }
+
+        if order.discount:
+            coupon = self.create_coupon(order.discount)
+
+            data['discounts'] = [{'coupon': coupon.id}]
+
         return self.client.v1.checkout.sessions.create(
             params={
-                'line_items': line_items,
-                'mode': 'payment',
-                'success_url': f"{settings.SITE_URL}/success",
+                **data,
             }
         )
+
+    def create_coupon(self, discount: Discount):
+        coupon = self.client.v1.coupons.create({
+            'duration': 'once',
+            'name': discount.name,
+            'percent_off': discount.percent,
+        })
+
+        return coupon
