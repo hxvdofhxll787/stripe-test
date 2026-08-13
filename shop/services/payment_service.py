@@ -1,6 +1,6 @@
 import stripe
 from django.conf import settings
-from shop.models import Item, Order, Discount, Tax
+from shop.models import Item, Order, Discount, Tax, Discount
 
 class PaymentService:
     def get_secret_key(self, currency: str):
@@ -83,7 +83,7 @@ class PaymentService:
             }
         )
 
-    def create_coupon(discount: Discount, client):
+    def create_coupon(self, discount: Discount, client):
         coupon = client.v1.coupons.create({
             'duration': 'once',
             'name': discount.name,
