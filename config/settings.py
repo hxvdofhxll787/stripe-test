@@ -26,9 +26,17 @@ load_dotenv(BASE_DIR / '.env')
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    host.strip()
+    for host in os.getenv('ALLOWED_HOSTS', '').split(',')
+    if host.strip()
+]
+
+INSTALLED_APPS = [
+    'django.contrib.admin',
+]
 
 
 # Application definition
@@ -143,3 +151,10 @@ STRIPE_EUR_SECRET_KEY = os.getenv("STRIPE_EUR_SECRET_KEY")
 STRIPE_EUR_PUBLISHABLE_KEY = os.getenv("STRIPE_EUR_PUBLISHABLE_KEY")
 
 SITE_URL = os.getenv('SITE_URL')
+
+CSRF_TRUSTED_ORIGINS = [
+    origin.strip()
+    for origin in os.getenv(
+    'CSRF_TRUSTED_ORIGINS','').split(',')
+    if origin.strip()
+]
